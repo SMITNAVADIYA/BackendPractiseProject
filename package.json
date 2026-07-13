@@ -1,0 +1,20 @@
+{
+  "name": "chai_backend",
+  "version": "1.0.0",
+  "description": "This is Pure BE project for practise",
+  "license": "ISC",
+  "author": "Smit Navadiya",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
