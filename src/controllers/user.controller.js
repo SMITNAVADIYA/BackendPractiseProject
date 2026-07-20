@@ -5,11 +5,12 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 
-const registerUser = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => { 
 
 
   // Get details from frontend
   const { fullName, userName, email, password } = req.body;
+
 
 
   // Check any field is empty OR skip by client and throw error
@@ -19,6 +20,12 @@ const registerUser = asyncHandler(async (req, res) => {
     )
   ) {
     throw new ApiError(400, "All fields are required");
+  }
+
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    throw new ApiError(400, 'Password must be at least 8 characters long and contain both letters and numbers')
   }
 
 
@@ -40,7 +47,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Get local path for avatar and cover image from client & throw error as avatar is required
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  let coverImageLocalPath;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path || '';
+  
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+      coverImageLocalPath = req.files.coverImage[0].path;
+  }
+
   if (!avatarLocalPath) {
     throw new ApiError(400, 'Avatar is required')
   }
@@ -51,7 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
   if (!avatar) {
-    throw new ApiError(400, 'Avatar file is required')
+    throw new ApiError(400, 'Failed to upload avatar on cloudinary, please try again')
   }
 
 
