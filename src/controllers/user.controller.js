@@ -283,7 +283,7 @@ const updateProfile = asyncHandler(async (req, res) => {
       $set: { fullName, email, userName, password }
     },
     { new: true }
-  ).select('-password');
+  ).select('-password -refreshToken');
 
   if (!user) {
     throw new ApiError(404, 'User not found')
@@ -458,7 +458,7 @@ const getUserVideoWatchHistory = asyncHandler(async (req,res) => {
     }
   ]);
 
-  return res.status(200).json(new ApiResponse(200,user[0].watchHistory,'Video history etched successfully!!!'))
+  return res.status(200).json(new ApiResponse(200,user[0].watchHistory,'Video history fetched successfully!!!'))
 })
 
 export { registerUser, loginUser, logOutUser, refreshNewToken, changeCurrentPassword, getCurrentUser, updateProfile, updateUserAvatar, updateUserCoverImage, getUserChannels ,getUserVideoWatchHistory} 
